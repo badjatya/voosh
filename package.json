@@ -1,0 +1,19 @@
+{
+  "name": "voosh-be",
+  "version": "1.0.0",
+  "description": "An assignment to create a todo application from voosh",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "author": "Archit Badjatya",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "mongoose": "^8.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}
