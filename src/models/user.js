@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
@@ -61,9 +61,6 @@ userSchema.methods.getJwtLoginToken = async function () {
 			expiresIn: process.env.JWT_EXPIRY,
 		}
 	);
-
-	this.tokens = this.tokens.concat({ token });
-	await this.save();
 	return token;
 };
 
