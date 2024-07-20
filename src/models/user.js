@@ -42,14 +42,6 @@ const userSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-// Hashing Password
-userSchema.pre("save", async function (next) {
-	if (this.isModified("password" && this.type === "email")) {
-		this.password = bcrypt.hash(this.password, 10);
-	}
-	next();
-});
-
 // Getting jwt login token
 userSchema.methods.getJwtLoginToken = async function () {
 	const token = jwt.sign(
