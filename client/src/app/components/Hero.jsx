@@ -1,11 +1,14 @@
-"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { cookies } from "next/headers";
 
 const Hero = () => {
+	const cookieStore = cookies();
+	const cookie = cookieStore.get("access-token");
+	const token = cookie ? cookie.value : null;
 	return (
-		<div className='min-h-[70vh] flex items-center justify-center'>
+		<div className='min-h-[80vh] flex items-center justify-center'>
 			<section className='mb-8 flex flex-col justify-between gap-6 sm:gap-10 md:mb-16 md:gap-16 lg:flex-row'>
 				{/* <!-- content - start --> */}
 				<div className='flex flex-col justify-center sm:text-center lg:py-12 lg:text-left xl:w-5/12'>
@@ -18,9 +21,17 @@ const Hero = () => {
 					</h1>
 
 					<div className='flex flex-col gap-2.5 sm:flex-row sm:justify-center lg:justify-start'>
-						<Button asChild>
-							<Link href='/sign-up'>Join Now to create Todo</Link>
-						</Button>
+						{token ? (
+							<Button asChild>
+								<Link href='/todo'>Manage Todo</Link>
+							</Button>
+						) : (
+							<Button asChild>
+								<Link href='/sign-up'>
+									Join Now to create Todo
+								</Link>
+							</Button>
+						)}
 					</div>
 				</div>
 				{/* <!-- content - end --> */}

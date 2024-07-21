@@ -21,16 +21,22 @@ import axiosInstance from "@/lib/api";
 import createCookie from "@/actions/auth";
 
 const formSchema = z.object({
+	firstName: z.string().min(2),
+	lastName: z.string().min(2),
 	email: z.string().email().min(2).max(50),
 	password: z.string().min(7).max(50),
+	confirmPassword: z.string().min(7).max(50),
 });
 
-const Login = () => {
+const SignUp = () => {
 	const form = useForm({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
+			firstName: "",
+			lastName: "",
 			email: "",
 			password: "",
+			confirmPassword: "",
 		},
 	});
 
@@ -38,7 +44,7 @@ const Login = () => {
 
 	async function onSubmit(values) {
 		try {
-			const { data } = await axiosInstance.post("/auth/login", values);
+			const { data } = await axiosInstance.post("/auth/register", values);
 			console.log("data: ", data.data);
 
 			if (data.success) {
@@ -52,15 +58,47 @@ const Login = () => {
 	}
 	return (
 		<div>
-			<div className='bg-white py-6 sm:py-8 lg:py-12'>
+			<div className=''>
 				<div className='mx-auto max-w-screen-2xl px-4 md:px-8'>
 					<h2 className='mb-4 text-center text-2xl font-bold text-gray-800 md:mb-8 lg:text-3xl'>
-						Login
+						Sign Up
 					</h2>
 
 					<Form {...form}>
 						<form className='mx-auto max-w-lg rounded-lg border'>
 							<div className='flex flex-col gap-4 p-4 md:p-8'>
+								<FormField
+									control={form.control}
+									name='firstName'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>First Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='Enter your first name'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+								<FormField
+									control={form.control}
+									name='lastName'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Last Name</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='Enter your last name'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 								<FormField
 									control={form.control}
 									name='email'
@@ -93,15 +131,33 @@ const Login = () => {
 										</FormItem>
 									)}
 								/>
+								<FormField
+									control={form.control}
+									name='confirmPassword'
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>
+												Confirm Password
+											</FormLabel>
+											<FormControl>
+												<Input
+													placeholder='Confirm your password'
+													{...field}
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
 								<Button onClick={form.handleSubmit(onSubmit)}>
-									Log in
+									Sign up
 								</Button>
 
 								<div className='relative flex items-center justify-center'>
 									<span className='absolute inset-x-0 h-px bg-gray-300'></span>
 									<span className='relative bg-white px-4 text-sm text-gray-400'>
-										Log in with social
+										Sign up with social
 									</span>
 								</div>
 
@@ -131,18 +187,18 @@ const Login = () => {
 												fill='#EA4335'
 											/>
 										</svg>
-										Sign in with Google
+										Sign up with Google
 									</div>
 								</Button>
 							</div>
 
 							<div className='flex items-center justify-center bg-gray-100 p-4'>
 								<p className='text-center text-sm text-gray-500'>
-									Don't have an account?{" "}
+									Already have an account?{" "}
 									<Link
-										href='/sign-up'
+										href='/login'
 										className='text-indigo-500 transition duration-100 hover:text-indigo-600 active:text-indigo-700'>
-										Sign up
+										Login
 									</Link>
 								</p>
 							</div>
@@ -154,4 +210,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default SignUp;
