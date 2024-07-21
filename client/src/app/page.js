@@ -1,14 +1,11 @@
-import { Button } from "@/components/ui/button";
+import Hero from "./components/Hero";
 
-const HomePage = () => {
+export default function Home() {
 	return (
-		<div className='min-h-screen flex items-center justify-center'>
-			<div>
-				<h1>Home Page</h1>
-				<Button>Click me</Button>
+		<div className='pb-6 sm:pb-8 lg:pb-12'>
+			<div className='mx-auto max-w-screen-2xl px-4 md:px-8'>
+				<Hero />
 			</div>
 		</div>
 	);
-};
-
-export default HomePage;
+}
