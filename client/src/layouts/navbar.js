@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { cookies } from "next/headers";
 
 const Navbar = () => {
+	const cookieStore = cookies();
+	const token = cookieStore.get("access-token");
+	console.log(token);
 	return (
 		<div className='bg-white'>
 			<div className='mx-auto max-w-screen-2xl px-4 md:px-8'>
@@ -12,15 +16,23 @@ const Navbar = () => {
 						aria-label='logo'>
 						Todo
 					</Link>
-
-					<div className='flex gap-4 items-center'>
-						<Button asChild>
-							<Link href='/login'>Login</Link>
-						</Button>
-						<Button variant='outline' asChild>
-							<Link href='/sign-up'>Signup</Link>
-						</Button>
-					</div>
+					{token ? (
+						<div className='flex gap-4 items-center'>
+							<Button asChild>
+								<Link href='/todo'>Todo</Link>
+							</Button>
+							<Button variant='outline'>Logout</Button>
+						</div>
+					) : (
+						<div className='flex gap-4 items-center'>
+							<Button asChild>
+								<Link href='/login'>Login</Link>
+							</Button>
+							<Button variant='outline' asChild>
+								<Link href='/sign-up'>Signup</Link>
+							</Button>
+						</div>
+					)}
 				</header>
 			</div>
 		</div>
