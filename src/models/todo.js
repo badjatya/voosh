@@ -21,6 +21,11 @@ const todoSchema = new mongoose.Schema(
 			enum: ["todo", "in progress", "done"],
 			default: "todo",
 		},
+		userId: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		},
 	},
 	{ timestamps: true }
 );
