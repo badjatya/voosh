@@ -6,6 +6,7 @@ import cors from "cors";
 // Routers
 import healthRouter from "./src/routes/health.js";
 import authRouter from "./src/routes/auth.js";
+import todoRouter from "./src/routes/todo.js";
 
 const app = express();
 
@@ -23,5 +24,6 @@ app.use(
 // Routes
 app.use("/health", healthRouter);
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/todo", todoRouter);
 
 export default app;
