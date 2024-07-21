@@ -1,10 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { revalidatePath } from "next/cache";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,7 +20,8 @@ import {
 } from "@/components/ui/form";
 
 import { axiosInstance } from "@/lib/api";
-import { createCookie } from "@/actions/auth";
+import { createCookie, getCookie } from "@/actions/auth";
+import { set } from "mongoose";
 
 const formSchema = z.object({
 	email: z.string().email().min(2).max(50),
@@ -36,7 +39,11 @@ const Login = () => {
 
 	const router = useRouter();
 
+	const [loading, setLoading] = useState(false);
+	const [token, setToken] = useState(null);
+
 	async function onSubmit(values) {
+		setLoading(true);
 		try {
 			const { data } = await axiosInstance.post("/auth/login", values);
 			console.log("data: ", data.data);
@@ -44,12 +51,22 @@ const Login = () => {
 			if (data.success) {
 				console.log("Success: ", data.message);
 				createCookie(data.data.token, data.data.user);
-				router.push("/todo");
+				setLoading(false);
+				setToken(data.data.token);
 			}
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setLoading(false);
 		}
 	}
+
+	useEffect(() => {
+		if (token) {
+			router.push("/todo");
+		}
+	}, [token]);
+
 	return (
 		<div>
 			<div className='bg-white py-6 sm:py-8 lg:py-12'>
@@ -94,8 +111,10 @@ const Login = () => {
 									)}
 								/>
 
-								<Button onClick={form.handleSubmit(onSubmit)}>
-									Log in
+								<Button
+									disable={!loading}
+									onClick={form.handleSubmit(onSubmit)}>
+									{loading ? "loading..." : "Log in"}
 								</Button>
 
 								<div className='relative flex items-center justify-center'>
