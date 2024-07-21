@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/form";
 
 import axiosInstance from "@/lib/api";
-import createCookie from "@/actions/auth";
+import { createCookie } from "@/actions/auth";
 
 const formSchema = z.object({
 	email: z.string().email().min(2).max(50),

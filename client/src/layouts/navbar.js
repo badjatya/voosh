@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cookies } from "next/headers";
+import LogoutButton from "@/components/logoutButton";
 
 const Navbar = () => {
 	const cookieStore = cookies();
@@ -21,7 +22,7 @@ const Navbar = () => {
 							<Button asChild>
 								<Link href='/todo'>Todo</Link>
 							</Button>
-							<Button variant='outline'>Logout</Button>
+							<LogoutButton />
 						</div>
 					) : (
 						<div className='flex gap-4 items-center'>

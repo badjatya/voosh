@@ -18,7 +18,6 @@ import {
 } from "@/components/ui/form";
 
 import axiosInstance from "@/lib/api";
-import createCookie from "@/actions/auth";
 
 const formSchema = z.object({
 	firstName: z.string().min(2),
@@ -45,12 +44,9 @@ const SignUp = () => {
 	async function onSubmit(values) {
 		try {
 			const { data } = await axiosInstance.post("/auth/register", values);
-			console.log("data: ", data.data);
 
 			if (data.success) {
-				console.log("Success: ", data.message);
-				createCookie(data.data.token, data.data.user);
-				router.push("/todo");
+				router.push("/login");
 			}
 		} catch (error) {
 			console.error(error);

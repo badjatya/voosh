@@ -39,23 +39,12 @@ export const register = async (req, res) => {
 			type: "email",
 		});
 
-		// Valid user, creating jwt token
-		const token = await user.getJwtLoginToken();
-
-		// Sending a cookie
-		res.cookie("token", token, {
-			expire: new Date(
-				Date.now() * process.env.COOKIE_TIME * 24 * 60 * 60 * 1000
-			),
-			httpOnly: true,
-		});
-
 		// Sending response
 		response({
 			res,
-			status: 200,
+			status: 201,
 			message: "User created successfully",
-			data: { user, token },
+			data: { user },
 		});
 	} catch (error) {
 		console.log("Error in register: ");

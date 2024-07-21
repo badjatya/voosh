@@ -10,4 +10,9 @@ async function createCookie(token, user) {
 	});
 }
 
-export default createCookie;
+async function deleteCookie() {
+	cookies().delete("access-token");
+	cookies().delete("user");
+}
+
+export { createCookie, deleteCookie };
