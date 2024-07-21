@@ -4,7 +4,10 @@ import User from "../models/user.js";
 import customError from "../utils/customError.js";
 
 const isLoggedIn = async (req, res, next) => {
-	const { token } = req.cookies;
+	let token =
+		req.cookies.token ||
+		req.body.token ||
+		req.header("Authorization").replace("Bearer ", "");
 
 	if (!token) {
 		return customError({

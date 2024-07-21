@@ -15,4 +15,11 @@ async function deleteCookie() {
 	cookies().delete("user");
 }
 
-export { createCookie, deleteCookie };
+async function getCookie() {
+	const cookieStore = cookies();
+	const cookie = cookieStore.get("access-token");
+	const token = cookie ? cookie.value : null;
+	return token;
+}
+
+export { createCookie, deleteCookie, getCookie };

@@ -17,7 +17,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 
-import axiosInstance from "@/lib/api";
+import { axiosInstance } from "@/lib/api";
 
 const formSchema = z.object({
 	firstName: z.string().min(2),

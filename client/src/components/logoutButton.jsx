@@ -3,14 +3,19 @@
 import { useRouter } from "next/navigation";
 import { deleteCookie } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
-import axiosInstance from "@/lib/api";
+import { useFetch } from "@/lib/api";
 
 const LogoutButton = () => {
 	const router = useRouter();
 
 	const logout = async () => {
 		try {
-			const { data } = await axiosInstance.get("/auth/logout");
+			const data = await useFetch({
+				url: "auth/logout",
+				method: "GET",
+			});
+
+			console.log("Logout data: ", data);
 
 			if (data.success) {
 				deleteCookie();

@@ -17,7 +17,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 
-import axiosInstance from "@/lib/api";
+import { axiosInstance } from "@/lib/api";
 import { createCookie } from "@/actions/auth";
 
 const formSchema = z.object({
