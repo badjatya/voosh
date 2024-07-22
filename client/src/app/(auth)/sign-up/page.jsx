@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +19,7 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { createCookie } from "@/actions/auth";
+import { revalidatePath } from "next/cache";
 
 import { axiosInstance } from "@/lib/api";
 
@@ -41,17 +43,23 @@ const SignUp = () => {
 		},
 	});
 
+	const [loading, setLoading] = useState(false);
+
 	const router = useRouter();
 
 	async function onSubmit(values) {
+		setLoading(true);
 		try {
 			const { data } = await axiosInstance.post("/auth/register", values);
 
 			if (data.success) {
+				setLoading(false);
 				router.push("/login");
 			}
 		} catch (error) {
 			console.error(error);
+		} finally {
+			setLoading(false);
 		}
 	}
 
@@ -65,6 +73,7 @@ const SignUp = () => {
 			if (data.success) {
 				createCookie(data.data.token, data.data.user);
 				router.push("/");
+				revalidatePath("/");
 			}
 		} catch (error) {
 			console.error(error);
@@ -168,8 +177,10 @@ const SignUp = () => {
 									)}
 								/>
 
-								<Button onClick={form.handleSubmit(onSubmit)}>
-									Sign up
+								<Button
+									disable={!loading}
+									onClick={form.handleSubmit(onSubmit)}>
+									{loading ? "Loading..." : "Sign up"}
 								</Button>
 
 								<div className='relative flex items-center justify-center'>

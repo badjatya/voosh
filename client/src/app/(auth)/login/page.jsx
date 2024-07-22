@@ -21,6 +21,7 @@ import {
 
 import { axiosInstance } from "@/lib/api";
 import { createCookie } from "@/actions/auth";
+import { revalidatePath } from "next/cache";
 
 const formSchema = z.object({
 	email: z.string().email().min(2).max(50),
@@ -51,6 +52,7 @@ const Login = () => {
 				createCookie(data.data.token, data.data.user);
 				setLoading(false);
 				router.push("/");
+				revalidatePath("/");
 			}
 		} catch (error) {
 			console.error(error);
@@ -69,6 +71,7 @@ const Login = () => {
 			if (data.success) {
 				createCookie(data.data.token, data.data.user);
 				router.push("/");
+				revalidatePath("/");
 			}
 		} catch (error) {
 			console.error(error);
