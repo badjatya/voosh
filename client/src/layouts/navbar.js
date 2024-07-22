@@ -22,8 +22,6 @@ const Navbar = () => {
 						{token ? (
 							<div className='flex gap-4 items-center'>
 								<Bar />
-
-								<LogoutButton />
 							</div>
 						) : (
 							<div className='flex gap-4 items-center'>

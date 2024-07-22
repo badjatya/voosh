@@ -15,6 +15,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import LogoutButton from "@/components/logoutButton";
 
 const Bar = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,25 +26,33 @@ const Bar = () => {
 	const { searchValue, setSearchValue, sortOption, setSortOption } =
 		useSearch();
 	return (
-		<div className='flex items-center justify-between rounded-lg gap-4'>
-			<Input
-				value={searchValue}
-				onChange={(e) => setSearchValue(e.target.value)}
-				placeholder='Search Todo'
-			/>
-			<Select onValueChange={(value) => setSortOption(value)}>
-				<SelectTrigger className='w-[180px]'>
-					<SelectValue placeholder='Sort By' />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem value='order'>Order</SelectItem>
-					<SelectItem value='title'>Title</SelectItem>
-					<SelectItem value='createdAt'>Created At</SelectItem>
-					<SelectItem value='updatedAt'>Updated At</SelectItem>
-				</SelectContent>
-			</Select>
+		<div className='flex flex-col items-center justify-between rounded-lg gap-4 lg:flex-row'>
+			{path === "/todo" && (
+				<div className='flex items-center justify-between gap-4'>
+					<Input
+						value={searchValue}
+						onChange={(e) => setSearchValue(e.target.value)}
+						placeholder='Search Todo'
+					/>
+					<Select onValueChange={(value) => setSortOption(value)}>
+						<SelectTrigger className='w-[180px]'>
+							<SelectValue placeholder='Sort By' />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value='order'>Order</SelectItem>
+							<SelectItem value='title'>Title</SelectItem>
+							<SelectItem value='createdAt'>
+								Created At
+							</SelectItem>
+							<SelectItem value='updatedAt'>
+								Updated At
+							</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+			)}
 
-			<div>
+			<div className='flex items-center justify-between gap-4'>
 				{path === "/todo" ? (
 					<Button onClick={openModal}>Create Todo</Button>
 				) : (
@@ -51,6 +60,7 @@ const Bar = () => {
 						<Link href='/todo'>Dashboard</Link>
 					</Button>
 				)}
+				<LogoutButton />
 			</div>
 
 			<CreateTodoModal isOpen={isModalOpen} onClose={closeModal} />
