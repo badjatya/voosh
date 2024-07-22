@@ -1,7 +1,6 @@
 import customError from "../utils/customError.js";
 import response from "../utils/response.js";
 
-import User from "../models/user.js";
 import Todo from "../models/todo.js";
 
 export const createTodo = async (req, res) => {
@@ -44,14 +43,25 @@ export const createTodo = async (req, res) => {
 
 export const getTodos = async (req, res) => {
 	try {
-		const todos = await Todo.find({ userId: req.user._id }).sort("order");
+		const todo = await Todo.find({
+			userId: req.user._id,
+			status: "todo",
+		}).sort("order");
+		const inProgressTodo = await Todo.find({
+			userId: req.user._id,
+			status: "in progress",
+		}).sort("order");
+		const doneTodo = await Todo.find({
+			userId: req.user._id,
+			status: "done",
+		}).sort("order");
 
 		// Sending response
 		response({
 			res,
 			status: 200,
-			message: "Todos fetched successfully",
-			data: { todos },
+			message: "Todo's fetched successfully",
+			data: { todo, inProgressTodo, doneTodo },
 		});
 	} catch (error) {
 		console.log("Error in get todo: ");

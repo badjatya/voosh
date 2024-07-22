@@ -23,7 +23,6 @@ const CreateTodoModal = ({ isOpen, onClose }) => {
 	});
 
 	const onSubmit = async (values) => {
-		console.log(values);
 		try {
 			const data = await useFetch({
 				url: "todo",
