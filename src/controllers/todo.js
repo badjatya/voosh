@@ -128,18 +128,16 @@ export const updateTodo = async (req, res) => {
 			});
 		}
 
-		todo.title = title;
-		todo.description = description;
-		todo.order = order;
-
-		await todo.save();
+		const updatedTodo = await Todo.findOneAndUpdate({ _id: id }, req.body, {
+			new: true,
+		});
 
 		// Sending response
 		response({
 			res,
 			status: 200,
 			message: "Todo updated successfully",
-			data: { todo },
+			data: { todo: updatedTodo },
 		});
 	} catch (error) {
 		console.log("Error in update todo: ");

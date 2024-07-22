@@ -13,21 +13,49 @@ const schema = z.object({
 	description: z.string().min(1, "Description is required"),
 });
 
-const CreateTodoModal = ({ isOpen, onClose }) => {
+const CreateTodoModal = ({
+	isOpen,
+	onClose,
+	id,
+	title,
+	description,
+	order,
+}) => {
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm({
 		resolver: zodResolver(schema),
+		defaultValues: {
+			title: title ? title : "",
+			description: description ? description : "",
+		},
 	});
 
-	const onSubmit = async (values) => {
+	const createTodo = async (values) => {
 		try {
 			const data = await useFetch({
 				url: "todo",
 				method: "POST",
 				body: JSON.stringify(values),
+			});
+
+			if (data.success) {
+				// TODO: revalidate the cache
+				onClose();
+			}
+		} catch (error) {}
+	};
+	const editTodo = async (values) => {
+		try {
+			const data = await useFetch({
+				url: `todo/${id}`,
+				method: "PATCH",
+				body: {
+					...values,
+					order,
+				},
 			});
 
 			if (data.success) {
@@ -42,7 +70,9 @@ const CreateTodoModal = ({ isOpen, onClose }) => {
 	return (
 		<div className='fixed inset-0 flex items-center justify-center bg-black bg-opacity-50'>
 			<div className='bg-white p-6 rounded shadow-lg w-full max-w-md mx-4 sm:w-1/2 lg:w-1/3'>
-				<h2 className='text-2xl font-bold mb-4'>Add Todo</h2>
+				<h2 className='text-2xl font-bold mb-4'>
+					{title ? "Edit Todo" : "Add Todo"}
+				</h2>
 				<form>
 					<div className='mb-4'>
 						<label className='block text-gray-700'>Title</label>
@@ -80,11 +110,19 @@ const CreateTodoModal = ({ isOpen, onClose }) => {
 							variant='destructive'>
 							Cancel
 						</Button>
-						<Button
-							onClick={handleSubmit(onSubmit)}
-							className='cursor-pointer'>
-							Create Todo
-						</Button>
+						{title ? (
+							<Button
+								onClick={handleSubmit(editTodo)}
+								className='cursor-pointer'>
+								Edit Todo
+							</Button>
+						) : (
+							<Button
+								onClick={handleSubmit(createTodo)}
+								className='cursor-pointer'>
+								Create Todo
+							</Button>
+						)}
 					</div>
 				</form>
 			</div>
