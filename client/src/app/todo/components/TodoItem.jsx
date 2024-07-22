@@ -3,19 +3,31 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CreateTodoModal from "./createTodoModal";
+import ViewTodo from "./view";
 import { useFetch } from "@/lib/api";
 
-const TodoItem = ({ title, description, createdAt, _id, order }) => {
-	const [isModalOpen, setIsModalOpen] = useState(false);
+const TodoItem = ({
+	_id,
+	title,
+	description,
+	order,
+	status,
+	createdAt,
+	updatedAt,
+}) => {
+	const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+	const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
 	const formatDate = (dateString) => {
 		const options = { year: "numeric", month: "long", day: "numeric" };
 		return new Date(dateString).toLocaleDateString(undefined, options);
 	};
 
-	const onView = () => {};
+	const onView = () => {
+		setIsViewModalOpen(true);
+	};
 	const onEdit = () => {
-		openModal();
+		openEditModal();
 	};
 	const onDelete = async () => {
 		try {
@@ -32,8 +44,8 @@ const TodoItem = ({ title, description, createdAt, _id, order }) => {
 		}
 	};
 
-	const openModal = () => setIsModalOpen(true);
-	const closeModal = () => setIsModalOpen(false);
+	const openEditModal = () => setIsEditModalOpen(true);
+	const closeEditModal = () => setIsEditModalOpen(false);
 
 	return (
 		<div className='bg-white shadow-md rounded-lg p-4 cursor-pointer'>
@@ -56,12 +68,21 @@ const TodoItem = ({ title, description, createdAt, _id, order }) => {
 				</div>
 			</div>
 			<CreateTodoModal
-				isOpen={isModalOpen}
-				onClose={closeModal}
+				isOpen={isEditModalOpen}
+				onClose={closeEditModal}
 				id={_id}
 				title={title}
 				description={description}
 				order={order}
+			/>
+			<ViewTodo
+				isOpen={isViewModalOpen}
+				onClose={() => setIsViewModalOpen(false)}
+				status={status}
+				title={title}
+				description={description}
+				createdAt={createdAt}
+				updatedAt={updatedAt}
 			/>
 		</div>
 	);
