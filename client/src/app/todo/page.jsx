@@ -6,7 +6,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSearch } from "./context";
 
 const Todo = () => {
-	const { searchValue } = useSearch();
+	const { searchValue, sortOption } = useSearch();
 
 	const [todo, setTodo] = useState([]);
 	const [inProgressTodo, setInProgressTodo] = useState([]);
@@ -25,10 +25,12 @@ const Todo = () => {
 		}
 	};
 
+	// UseEffect to fetch todos on initial render
 	useEffect(() => {
 		fetchTodo();
 	}, []);
 
+	// UseEffect to fetch todos on searchValue change
 	useEffect(() => {
 		const fetchTodos = async () => {
 			try {
@@ -59,6 +61,36 @@ const Todo = () => {
 		// Cleanup function to clear the timeout if searchValue changes before the timeout completes
 		return () => clearTimeout(delayDebounceFn);
 	}, [searchValue]);
+
+	// UseEffect to sort todos based on sortOption
+	useEffect(() => {
+		const sortTodos = (todos) => {
+			switch (sortOption) {
+				case "title":
+					return [...todos].sort((a, b) =>
+						a.title.localeCompare(b.title)
+					);
+				case "createdAt":
+					return [...todos].sort(
+						(a, b) => new Date(a.createdAt) - new Date(b.createdAt)
+					);
+				case "updatedAt":
+					return [...todos].sort(
+						(a, b) => new Date(a.updatedAt) - new Date(b.updatedAt)
+					);
+				case "mostRecent":
+					return [...todos].sort(
+						(a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+					);
+				default:
+					return todos;
+			}
+		};
+
+		setTodo((prevTodos) => sortTodos(prevTodos));
+		setInProgressTodo((prevTodos) => sortTodos(prevTodos));
+		setDoneTodo((prevTodos) => sortTodos(prevTodos));
+	}, [sortOption]);
 
 	const onDragEnd = async (result) => {
 		console.log("Result: ", result);

@@ -7,8 +7,10 @@ const SearchContext = createContext();
 // Create a provider component
 export const SearchProvider = ({ children }) => {
 	const [searchValue, setSearchValue] = useState("");
+	const [sortOption, setSortOption] = useState("order");
 	return (
-		<SearchContext.Provider value={{ searchValue, setSearchValue }}>
+		<SearchContext.Provider
+			value={{ searchValue, setSearchValue, sortOption, setSortOption }}>
 			{children}
 		</SearchContext.Provider>
 	);

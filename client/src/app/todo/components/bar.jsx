@@ -8,6 +8,13 @@ import CreateTodoModal from "./createTodoModal";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSearch } from "../context";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 const Bar = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,7 +22,8 @@ const Bar = () => {
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
-	const { searchValue, setSearchValue } = useSearch();
+	const { searchValue, setSearchValue, sortOption, setSortOption } =
+		useSearch();
 	return (
 		<div className='flex items-center justify-between rounded-lg gap-4'>
 			<Input
@@ -23,6 +31,18 @@ const Bar = () => {
 				onChange={(e) => setSearchValue(e.target.value)}
 				placeholder='Search Todo'
 			/>
+			<Select onValueChange={(value) => setSortOption(value)}>
+				<SelectTrigger className='w-[180px]'>
+					<SelectValue placeholder='Sort By' />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectItem value='order'>Order</SelectItem>
+					<SelectItem value='title'>Title</SelectItem>
+					<SelectItem value='createdAt'>Created At</SelectItem>
+					<SelectItem value='updatedAt'>Updated At</SelectItem>
+				</SelectContent>
+			</Select>
+
 			<div>
 				{path === "/todo" ? (
 					<Button onClick={openModal}>Create Todo</Button>
