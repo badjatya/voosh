@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { revalidatePath } from "next/cache";
+import { useGoogleLogin } from "@react-oauth/google";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,8 +20,7 @@ import {
 } from "@/components/ui/form";
 
 import { axiosInstance } from "@/lib/api";
-import { createCookie, getCookie } from "@/actions/auth";
-import { set } from "mongoose";
+import { createCookie } from "@/actions/auth";
 
 const formSchema = z.object({
 	email: z.string().email().min(2).max(50),
@@ -40,7 +39,6 @@ const Login = () => {
 	const router = useRouter();
 
 	const [loading, setLoading] = useState(false);
-	const [token, setToken] = useState(null);
 
 	async function onSubmit(values) {
 		setLoading(true);
@@ -52,7 +50,7 @@ const Login = () => {
 				console.log("Success: ", data.message);
 				createCookie(data.data.token, data.data.user);
 				setLoading(false);
-				setToken(data.data.token);
+				router.push("/");
 			}
 		} catch (error) {
 			console.error(error);
@@ -61,11 +59,25 @@ const Login = () => {
 		}
 	}
 
-	useEffect(() => {
-		if (token) {
-			router.push("/todo");
+	const handleGoogleLoginSuccess = async (tokenResponse) => {
+		const accessToken = tokenResponse.access_token;
+		try {
+			const { data } = await axiosInstance.post("/auth/google", {
+				accessToken,
+			});
+
+			if (data.success) {
+				createCookie(data.data.token, data.data.user);
+				router.push("/");
+			}
+		} catch (error) {
+			console.error(error);
 		}
-	}, [token]);
+	};
+
+	const signInWithGoogle = useGoogleLogin({
+		onSuccess: handleGoogleLoginSuccess,
+	});
 
 	return (
 		<div>
@@ -124,7 +136,10 @@ const Login = () => {
 									</span>
 								</div>
 
-								<Button variant='outline' asChild>
+								<Button
+									onClick={signInWithGoogle}
+									variant='outline'
+									asChild>
 									<div className='flex items-center gap-4'>
 										<svg
 											className='h-5 w-5 shrink-0'

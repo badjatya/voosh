@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useGoogleLogin } from "@react-oauth/google";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,6 +17,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import { createCookie } from "@/actions/auth";
 
 import { axiosInstance } from "@/lib/api";
 
@@ -52,6 +54,26 @@ const SignUp = () => {
 			console.error(error);
 		}
 	}
+
+	const handleGoogleLoginSuccess = async (tokenResponse) => {
+		const accessToken = tokenResponse.access_token;
+		try {
+			const { data } = await axiosInstance.post("/auth/google", {
+				accessToken,
+			});
+
+			if (data.success) {
+				createCookie(data.data.token, data.data.user);
+				router.push("/");
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const signUpWithGoogle = useGoogleLogin({
+		onSuccess: handleGoogleLoginSuccess,
+	});
 	return (
 		<div>
 			<div className=''>
@@ -157,7 +179,10 @@ const SignUp = () => {
 									</span>
 								</div>
 
-								<Button variant='outline' asChild>
+								<Button
+									onClick={signUpWithGoogle}
+									variant='outline'
+									asChild>
 									<div className='flex items-center gap-4'>
 										<svg
 											className='h-5 w-5 shrink-0'
