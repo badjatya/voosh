@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import CreateTodoModal from "./createTodoModal";
 import ViewTodo from "./view";
-import { useFetch } from "@/lib/api";
+import { fetchData } from "@/lib/api";
 import { Draggable } from "react-beautiful-dnd";
 
 const TodoItem = ({
@@ -33,7 +33,7 @@ const TodoItem = ({
 	};
 	const onDelete = async () => {
 		try {
-			const data = await useFetch({
+			const data = await fetchData({
 				url: `todo/${_id}`,
 				method: "DELETE",
 			});

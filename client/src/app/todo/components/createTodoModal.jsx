@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useFetch } from "@/lib/api";
+import { fetchData } from "@/lib/api";
 import { revalidatePath } from "next/cache";
 
 const schema = z.object({
@@ -35,7 +35,7 @@ const CreateTodoModal = ({
 
 	const createTodo = async (values) => {
 		try {
-			const data = await useFetch({
+			const data = await fetchData({
 				url: "todo",
 				method: "POST",
 				body: JSON.stringify(values),
@@ -49,7 +49,7 @@ const CreateTodoModal = ({
 	};
 	const editTodo = async (values) => {
 		try {
-			const data = await useFetch({
+			const data = await fetchData({
 				url: `todo/${id}`,
 				method: "PATCH",
 				body: {

@@ -2,7 +2,7 @@ import axios from "axios";
 import { getCookie } from "@/actions/auth";
 
 // Assuming BE_URL is your backend URL
-const BE_URL = "http://localhost:8000/api/v1/";
+const BE_URL = process.env.NEXT_PUBLIC_BE_URL;
 
 const axiosInstance = axios.create({
 	baseURL: BE_URL,
@@ -11,8 +11,11 @@ const axiosInstance = axios.create({
 	},
 });
 
-const useFetch = async ({ url, method, body }) => {
+// Rename `fetchData` to `fetchData`
+const fetchData = async ({ url, method, body }) => {
 	const token = await getCookie("access-token");
+
+	console.log("TOKEN: ", token);
 	try {
 		const { data } = await axiosInstance(`${BE_URL}${url}`, {
 			method,
@@ -27,4 +30,4 @@ const useFetch = async ({ url, method, body }) => {
 	}
 };
 
-export { axiosInstance, useFetch };
+export { axiosInstance, fetchData };

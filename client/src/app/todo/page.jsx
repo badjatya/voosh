@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import TodoItem from "./components/TodoItem";
-import { useFetch } from "@/lib/api";
+import { fetchData } from "@/lib/api";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSearch } from "./context";
 
@@ -13,7 +13,7 @@ const Todo = () => {
 	const [doneTodo, setDoneTodo] = useState([]);
 
 	const fetchTodo = async () => {
-		const data = await useFetch({
+		const data = await fetchData({
 			url: "todo",
 			method: "GET",
 		});
@@ -34,7 +34,7 @@ const Todo = () => {
 	useEffect(() => {
 		const fetchTodos = async () => {
 			try {
-				const data = await useFetch({
+				const data = await fetchData({
 					url: `todo/search/${searchValue}`,
 					method: "GET",
 				});
@@ -148,7 +148,7 @@ const Todo = () => {
 		};
 
 		try {
-			const data = await useFetch({
+			const data = await fetchData({
 				url: "todo",
 				method: "PUT",
 				body: updatedTodos,

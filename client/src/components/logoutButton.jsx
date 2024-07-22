@@ -3,14 +3,14 @@
 import { useRouter } from "next/navigation";
 import { deleteCookie } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
-import { useFetch } from "@/lib/api";
+import { fetchData } from "@/lib/api";
 
 const LogoutButton = () => {
 	const router = useRouter();
 
 	const logout = async () => {
 		try {
-			const data = await useFetch({
+			const data = await fetchData({
 				url: "auth/logout",
 				method: "GET",
 			});
