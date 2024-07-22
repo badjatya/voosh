@@ -63,9 +63,37 @@ const Todo = () => {
 			aDoneTodo.splice(destination.index, 0, add);
 		}
 
+		// Updating states
 		setTodo([...aTodo]);
 		setInProgressTodo([...aInProgressTodo]);
 		setDoneTodo([...aDoneTodo]);
+
+		// Updating database
+		const updatedTodos = {
+			todo: aTodo.map((item, index) => ({ ...item, order: index })),
+			inProgressTodo: aInProgressTodo.map((item, index) => ({
+				...item,
+				order: index,
+			})),
+			doneTodo: aDoneTodo.map((item, index) => ({
+				...item,
+				order: index,
+			})),
+		};
+
+		try {
+			const data = await useFetch({
+				url: "todo",
+				method: "PUT",
+				body: updatedTodos,
+			});
+
+			if (data.success) {
+				console.log("Updated dnd data: ", data);
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	return (

@@ -148,6 +148,73 @@ export const updateTodo = async (req, res) => {
 	}
 };
 
+export const updateTodoStatus = async (req, res) => {
+	const { todo, inProgressTodo, doneTodo } = req.body;
+
+	if (!todo || !inProgressTodo || !doneTodo) {
+		return customError({
+			res,
+			status: 400,
+			message: "todo, inProgressTodo, and doneTodo are required",
+		});
+	}
+
+	try {
+		const bulkOperations = [];
+
+		todo.forEach((item) => {
+			bulkOperations.push({
+				updateOne: {
+					filter: { _id: item._id },
+					update: {
+						order: item.order,
+						status: "todo",
+					},
+				},
+			});
+		});
+
+		inProgressTodo.forEach((item) => {
+			bulkOperations.push({
+				updateOne: {
+					filter: { _id: item._id },
+					update: {
+						order: item.order,
+						status: "in progress",
+					},
+				},
+			});
+		});
+
+		doneTodo.forEach((item) => {
+			bulkOperations.push({
+				updateOne: {
+					filter: { _id: item._id },
+					update: {
+						order: item.order,
+						status: "done",
+					},
+				},
+			});
+		});
+
+		await Todo.bulkWrite(bulkOperations);
+
+		// Sending response
+		res.status(200).json({
+			success: true,
+			message: "Todos updated successfully",
+			data: {},
+		});
+	} catch (error) {
+		console.log("Error in update todo status: ");
+		console.log(error);
+		return res
+			.status(500)
+			.json({ success: false, message: "Internal server error" });
+	}
+};
+
 export const deleteTodo = async (req, res) => {
 	const { id } = req.params;
 
