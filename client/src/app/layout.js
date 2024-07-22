@@ -3,6 +3,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import Navbar from "@/layouts/navbar";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { SearchProvider } from "./todo/context";
 
 const fontSans = FontSans({
 	subsets: ["latin"],
@@ -24,8 +25,10 @@ export default function RootLayout({ children }) {
 						"bg-background font-sans antialiased",
 						fontSans.variable
 					)}>
-					<Navbar />
-					{children}
+					<SearchProvider>
+						<Navbar />
+						{children}
+					</SearchProvider>
 				</body>
 			</GoogleOAuthProvider>
 		</html>

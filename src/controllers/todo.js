@@ -245,3 +245,44 @@ export const deleteTodo = async (req, res) => {
 			.json({ success: false, message: "Internal server error" });
 	}
 };
+
+export const searchTodo = async (req, res) => {
+	const { value } = req.params;
+
+	try {
+		const searchQuery = {
+			userId: req.user._id,
+			$or: [
+				{ title: { $regex: value, $options: "i" } },
+				{ description: { $regex: value, $options: "i" } },
+			],
+		};
+
+		// Perform the search
+		const todo = await Todo.find({
+			...searchQuery,
+			status: "todo",
+		}).sort("order");
+		const inProgressTodo = await Todo.find({
+			...searchQuery,
+			status: "in progress",
+		}).sort("order");
+		const doneTodo = await Todo.find({
+			...searchQuery,
+			status: "done",
+		}).sort("order");
+
+		// Send the response
+		res.status(200).json({
+			success: true,
+			message: "Search Todo's fetched successfully",
+			data: { todo, inProgressTodo, doneTodo },
+		});
+	} catch (error) {
+		console.error("Error in searchTodo: ", error);
+		res.status(500).json({
+			success: false,
+			message: "Internal server error",
+		});
+	}
+};

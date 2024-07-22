@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import CreateTodoModal from "./createTodoModal";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useSearch } from "../context";
 
 const Bar = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,9 +15,14 @@ const Bar = () => {
 
 	const openModal = () => setIsModalOpen(true);
 	const closeModal = () => setIsModalOpen(false);
+	const { searchValue, setSearchValue } = useSearch();
 	return (
 		<div className='flex items-center justify-between rounded-lg gap-4'>
-			<Input placeholder='Search Todo' />
+			<Input
+				value={searchValue}
+				onChange={(e) => setSearchValue(e.target.value)}
+				placeholder='Search Todo'
+			/>
 			<div>
 				{path === "/todo" ? (
 					<Button onClick={openModal}>Create Todo</Button>

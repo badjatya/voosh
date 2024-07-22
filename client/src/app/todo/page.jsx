@@ -2,29 +2,63 @@
 import { useState, useEffect } from "react";
 import TodoItem from "./components/TodoItem";
 import { useFetch } from "@/lib/api";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { useSearch } from "./context";
 
 const Todo = () => {
+	const { searchValue } = useSearch();
+
 	const [todo, setTodo] = useState([]);
 	const [inProgressTodo, setInProgressTodo] = useState([]);
 	const [doneTodo, setDoneTodo] = useState([]);
 
-	useEffect(() => {
-		const fetchTodo = async () => {
-			const data = await useFetch({
-				url: "todo",
-				method: "GET",
-			});
+	const fetchTodo = async () => {
+		const data = await useFetch({
+			url: "todo",
+			method: "GET",
+		});
 
-			if (data.success) {
-				console.log(data);
-				setTodo(data.data.todo);
-				setInProgressTodo(data.data.inProgressTodo);
-				setDoneTodo(data.data.doneTodo);
-			}
-		};
+		if (data.success) {
+			setTodo(data.data.todo);
+			setInProgressTodo(data.data.inProgressTodo);
+			setDoneTodo(data.data.doneTodo);
+		}
+	};
+
+	useEffect(() => {
 		fetchTodo();
 	}, []);
+
+	useEffect(() => {
+		const fetchTodos = async () => {
+			try {
+				const data = await useFetch({
+					url: `todo/search/${searchValue}`,
+					method: "GET",
+				});
+
+				if (data.success) {
+					setTodo(data.data.todo);
+					setInProgressTodo(data.data.inProgressTodo);
+					setDoneTodo(data.data.doneTodo);
+				}
+			} catch (error) {
+				console.error("Error fetching todos:", error);
+			}
+		};
+
+		// Debounce mechanism: delay the fetch call
+		const delayDebounceFn = setTimeout(() => {
+			if (searchValue) {
+				fetchTodos();
+			} else {
+				fetchTodo();
+			}
+		}, 500); // 500ms debounce delay
+
+		// Cleanup function to clear the timeout if searchValue changes before the timeout completes
+		return () => clearTimeout(delayDebounceFn);
+	}, [searchValue]);
 
 	const onDragEnd = async (result) => {
 		console.log("Result: ", result);
