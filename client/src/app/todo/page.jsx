@@ -6,7 +6,7 @@ import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useSearch } from "./context";
 
 const Todo = () => {
-	const { searchValue, sortOption } = useSearch();
+	const { searchValue, sortOption, newTodo } = useSearch();
 
 	const [todo, setTodo] = useState([]);
 	const [inProgressTodo, setInProgressTodo] = useState([]);
@@ -28,7 +28,7 @@ const Todo = () => {
 	// UseEffect to fetch todos on initial render
 	useEffect(() => {
 		fetchTodo();
-	}, []);
+	}, [newTodo]);
 
 	// UseEffect to fetch todos on searchValue change
 	useEffect(() => {

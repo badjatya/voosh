@@ -7,6 +7,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { fetchData } from "@/lib/api";
 import { revalidatePath } from "next/cache";
+import { useSearch } from "../context";
+import { set } from "mongoose";
 
 const schema = z.object({
 	title: z.string().min(1, "Title is required"),
@@ -21,6 +23,7 @@ const CreateTodoModal = ({
 	description,
 	order,
 }) => {
+	const { setNewTodo } = useSearch();
 	const {
 		register,
 		handleSubmit,
@@ -42,8 +45,9 @@ const CreateTodoModal = ({
 			});
 
 			if (data.success) {
-				// TODO: revalidate the cache
+				setNewTodo(data.data.todo._id);
 				onClose();
+				revalidatePath("/todo");
 			}
 		} catch (error) {}
 	};

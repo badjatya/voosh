@@ -8,9 +8,17 @@ const SearchContext = createContext();
 export const SearchProvider = ({ children }) => {
 	const [searchValue, setSearchValue] = useState("");
 	const [sortOption, setSortOption] = useState("order");
+	const [newTodo, setNewTodo] = useState(false);
 	return (
 		<SearchContext.Provider
-			value={{ searchValue, setSearchValue, sortOption, setSortOption }}>
+			value={{
+				searchValue,
+				setSearchValue,
+				sortOption,
+				setSortOption,
+				newTodo,
+				setNewTodo,
+			}}>
 			{children}
 		</SearchContext.Provider>
 	);
