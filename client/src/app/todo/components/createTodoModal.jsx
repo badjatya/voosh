@@ -63,7 +63,8 @@ const CreateTodoModal = ({
 			});
 
 			if (data.success) {
-				// TODO: revalidate the cache
+				setNewTodo(data.data.todo._id);
+				revalidatePath("/todo");
 				onClose();
 			}
 		} catch (error) {}
