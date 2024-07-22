@@ -16,7 +16,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
 	cors({
-		origin: "https://badjatya-voosh.netlify.app/",
+		origin: "*",
 		credentials: true,
 	})
 );
