@@ -4,12 +4,19 @@ import User from "../models/user.js";
 import customError from "../utils/customError.js";
 
 const isLoggedIn = async (req, res, next) => {
-	let token =
-		req.cookies.token ||
-		req.body.token ||
-		req.header("Authorization").replace("Bearer ", "");
+	let token = req.cookies.token;
 
-	if (!token) {
+	if (!token && req.header("Authorization")) {
+		token = req.header("Authorization").replace("Bearer ", "");
+
+		if (!token) {
+			return customError({
+				res,
+				status: 401,
+				message: "Please login to access this route",
+			});
+		}
+	} else if (!token) {
 		return customError({
 			res,
 			status: 401,
